@@ -29,6 +29,16 @@
 #  endif
 #endif
 
+/*
+ * Feature-test macros must be visible before any system header is included.
+ * zlib.h pulls in zconf.h, which can itself include sys/types.h and unistd.h,
+ * so defining _POSIX_C_SOURCE after zlib.h is too late on libc
+ * implementations that cache feature selection in their first system header.
+ */
+#ifndef _POSIX_C_SOURCE
+#  define _POSIX_C_SOURCE 200112L
+#endif
+
 #include <stdio.h>
 #include "zlib.h"
 #ifdef STDC
@@ -37,9 +47,6 @@
 #  include <limits.h>
 #endif
 
-#ifndef _POSIX_C_SOURCE
-#  define _POSIX_C_SOURCE 200112L
-#endif
 #include <fcntl.h>
 
 #ifdef _WIN32
